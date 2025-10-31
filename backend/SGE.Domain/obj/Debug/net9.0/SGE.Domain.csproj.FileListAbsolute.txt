@@ -1,0 +1,11 @@
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\bin\Debug\net9.0\SGE.Domain.deps.json
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\bin\Debug\net9.0\SGE.Domain.dll
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\bin\Debug\net9.0\SGE.Domain.pdb
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.AssemblyInfoInputs.cache
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.AssemblyInfo.cs
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.csproj.CoreCompileInputs.cache
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.dll
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\refint\SGE.Domain.dll
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\SGE.Domain.pdb
+C:\Projeto\pucminas\GestaoEstoque\backend\SGE.Domain\obj\Debug\net9.0\ref\SGE.Domain.dll
