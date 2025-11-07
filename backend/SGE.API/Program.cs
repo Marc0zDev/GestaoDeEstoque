@@ -14,6 +14,9 @@ builder.Services.AddControllers();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+// Add Report Services
+builder.Services.AddScoped<IReportService, ReportService>();
+
 // CORS configuration
 builder.Services.AddCors(options =>
 {
