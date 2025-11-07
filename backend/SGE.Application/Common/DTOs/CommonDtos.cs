@@ -88,6 +88,75 @@ public class LoginResponseDto
     public UsuarioDto Usuario { get; set; } = new();
 }
 
+// DTOs de Criação
+public class CreateCategoriaDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Descricao { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class UpdateCategoriaDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Descricao { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class CreateFornecedorDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Cnpj { get; set; }
+    public string? Email { get; set; }
+    public string? Telefone { get; set; }
+    public string? Endereco { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class UpdateFornecedorDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Cnpj { get; set; }
+    public string? Email { get; set; }
+    public string? Telefone { get; set; }
+    public string? Endereco { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class CreateProdutoDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Descricao { get; set; }
+    public string Codigo { get; set; } = string.Empty;
+    public decimal Preco { get; set; }
+    public int EstoqueMinimo { get; set; }
+    public int EstoqueMaximo { get; set; }
+    public Guid CategoriaId { get; set; }
+    public Guid? FornecedorId { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class UpdateProdutoDto
+{
+    public string Nome { get; set; } = string.Empty;
+    public string? Descricao { get; set; }
+    public string Codigo { get; set; } = string.Empty;
+    public decimal Preco { get; set; }
+    public int EstoqueMinimo { get; set; }
+    public int EstoqueMaximo { get; set; }
+    public Guid CategoriaId { get; set; }
+    public Guid? FornecedorId { get; set; }
+    public bool Ativo { get; set; } = true;
+}
+
+public class CreateEstoqueMovimentoDto
+{
+    public Guid ProdutoId { get; set; }
+    public string Tipo { get; set; } = string.Empty; // "Entrada" ou "Saida"
+    public int Quantidade { get; set; }
+    public string? Observacoes { get; set; }
+}
+
 public class PaginatedResultDto<T>
 {
     public List<T> Items { get; set; } = new();

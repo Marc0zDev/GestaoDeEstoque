@@ -5,16 +5,22 @@ namespace SGE.Domain.Interfaces;
 public interface IProdutoRepository
 {
     Task<Produto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<Produto?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default);
     Task<Produto?> GetByCodigoAsync(string codigo, CancellationToken cancellationToken = default);
     Task<List<Produto>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<List<Produto>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default);
     Task<List<Produto>> GetActiveAsync(CancellationToken cancellationToken = default);
+    Task<List<Produto>> GetAtivosAsync(CancellationToken cancellationToken = default);
     Task<List<Produto>> GetByCategoriaAsync(Guid categoriaId, CancellationToken cancellationToken = default);
     Task<List<Produto>> GetByFornecedorAsync(Guid fornecedorId, CancellationToken cancellationToken = default);
     Task<List<Produto>> SearchAsync(string termo, CancellationToken cancellationToken = default);
     Task<List<Produto>> GetLowStockAsync(CancellationToken cancellationToken = default);
     Task AddAsync(Produto produto, CancellationToken cancellationToken = default);
     Task UpdateAsync(Produto produto, CancellationToken cancellationToken = default);
+    void Update(Produto produto);
+    void Delete(Produto produto);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     Task<bool> ExistsWithCodigoAsync(string codigo, Guid? excludeId = null, CancellationToken cancellationToken = default);
     Task<bool> HasEstoqueItemsAsync(Guid id, CancellationToken cancellationToken = default);
+    Task<bool> HasMovimentacoesAsync(Guid id, CancellationToken cancellationToken = default);
 }

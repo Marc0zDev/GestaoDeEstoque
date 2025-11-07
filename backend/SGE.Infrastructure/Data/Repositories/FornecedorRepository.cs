@@ -87,4 +87,22 @@ public class FornecedorRepository : IFornecedorRepository
         return await _context.Produtos
             .AnyAsync(p => p.FornecedorId == id, cancellationToken);
     }
+
+    public async Task<List<Fornecedor>> GetAtivosAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Fornecedores
+            .Where(f => f.Ativo)
+            .OrderBy(f => f.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public void Update(Fornecedor fornecedor)
+    {
+        _context.Fornecedores.Update(fornecedor);
+    }
+
+    public void Delete(Fornecedor fornecedor)
+    {
+        _context.Fornecedores.Remove(fornecedor);
+    }
 }

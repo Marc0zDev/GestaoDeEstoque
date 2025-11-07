@@ -103,4 +103,30 @@ public class CategoriaRepository : ICategoriaRepository
         return await _context.Produtos
             .AnyAsync(p => p.CategoriaId == id, cancellationToken);
     }
+
+    public async Task<List<Categoria>> GetAtivasAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Categorias
+            .Include(c => c.CategoriaParent)
+            .Include(c => c.SubCategorias)
+            .Where(c => c.Ativo)
+            .OrderBy(c => c.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<Categoria?> GetByNameAsync(string nome, CancellationToken cancellationToken = default)
+    {
+        return await _context.Categorias
+            .FirstOrDefaultAsync(c => c.Nome == nome, cancellationToken);
+    }
+
+    public void Update(Categoria categoria)
+    {
+        _context.Categorias.Update(categoria);
+    }
+
+    public void Delete(Categoria categoria)
+    {
+        _context.Categorias.Remove(categoria);
+    }
 }

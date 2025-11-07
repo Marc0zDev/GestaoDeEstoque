@@ -23,41 +23,8 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        // Aplica todas as configurações dos arquivos IEntityTypeConfiguration
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-        // Configuração de Value Objects
-        modelBuilder.Entity<Usuario>()
-            .OwnsOne(u => u.Email, email =>
-            {
-                email.Property(e => e.Value)
-                    .HasColumnName("Email")
-                    .HasMaxLength(255)
-                    .IsRequired();
-
-                email.HasIndex(e => e.Value)
-                    .IsUnique();
-            });
-
-        modelBuilder.Entity<Fornecedor>()
-            .OwnsOne(f => f.Cnpj, cnpj =>
-            {
-                cnpj.Property(c => c.Value)
-                    .HasColumnName("Cnpj")
-                    .HasMaxLength(14)
-                    .IsRequired();
-
-                cnpj.HasIndex(c => c.Value)
-                    .IsUnique();
-            });
-
-        // Configuração de conversores para enums
-        modelBuilder.Entity<Usuario>()
-            .Property(u => u.Role)
-            .HasConversion<string>();
-
-        modelBuilder.Entity<EstoqueMovimento>()
-            .Property(em => em.TipoMovimento)
-            .HasConversion<string>();
 
         base.OnModelCreating(modelBuilder);
     }

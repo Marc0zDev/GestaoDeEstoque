@@ -17,10 +17,16 @@ public class MappingProfile : Profile
         CreateMap<Categoria, CategoriaDto>()
             .ForMember(dest => dest.CategoriaPai, opt => opt.MapFrom(src => src.CategoriaParent != null ? src.CategoriaParent.Nome : null))
             .ForMember(dest => dest.SubCategorias, opt => opt.MapFrom(src => src.SubCategorias));
+        CreateMap<CreateCategoriaDto, Categoria>();
+        CreateMap<UpdateCategoriaDto, Categoria>();
 
-        // Fornecedor mappings
+        // Fornecedor mappings  
         CreateMap<Fornecedor, FornecedorDto>()
-            .ForMember(dest => dest.Cnpj, opt => opt.MapFrom(src => src.Cnpj.Value));
+            .ForMember(dest => dest.Cnpj, opt => opt.MapFrom(src => src.Cnpj != null ? src.Cnpj.Value : null));
+        CreateMap<CreateFornecedorDto, Fornecedor>()
+            .ForMember(dest => dest.Cnpj, opt => opt.Ignore()); // Será tratado no controller
+        CreateMap<UpdateFornecedorDto, Fornecedor>()
+            .ForMember(dest => dest.Cnpj, opt => opt.Ignore()); // Será tratado no controller
 
         // LocalArmazenagem mappings
         CreateMap<LocalArmazenagem, LocalArmazenagemDto>();
@@ -30,6 +36,8 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.CategoriaNome, opt => opt.MapFrom(src => src.Categoria != null ? src.Categoria.Nome : string.Empty))
             .ForMember(dest => dest.FornecedorNome, opt => opt.MapFrom(src => src.Fornecedor != null ? src.Fornecedor.Nome : string.Empty))
             .ForMember(dest => dest.QuantidadeTotal, opt => opt.Ignore()); // Será preenchido separadamente
+        CreateMap<CreateProdutoDto, Produto>();
+        CreateMap<UpdateProdutoDto, Produto>();
 
         // EstoqueItem mappings
         CreateMap<EstoqueItem, EstoqueItemDto>()
@@ -42,5 +50,6 @@ public class MappingProfile : Profile
             .ForMember(dest => dest.TipoMovimento, opt => opt.MapFrom(src => src.TipoMovimento.ToString()))
             .ForMember(dest => dest.ProdutoNome, opt => opt.MapFrom(src => src.EstoqueItem != null && src.EstoqueItem.Produto != null ? src.EstoqueItem.Produto.Nome : string.Empty))
             .ForMember(dest => dest.LocalNome, opt => opt.MapFrom(src => src.EstoqueItem != null && src.EstoqueItem.LocalArmazenagem != null ? src.EstoqueItem.LocalArmazenagem.Nome : string.Empty));
+        CreateMap<CreateEstoqueMovimentoDto, EstoqueMovimento>();
     }
 }

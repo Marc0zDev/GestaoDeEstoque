@@ -128,4 +128,49 @@ public class ProdutoRepository : IProdutoRepository
         return await _context.EstoqueItens
             .AnyAsync(e => e.ProdutoId == id, cancellationToken);
     }
+
+    public async Task<Produto?> GetByIdWithDetailsAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.Produtos
+            .Include(p => p.Categoria)
+            .Include(p => p.Fornecedor)
+            .Include(p => p.EstoqueItens)
+            .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+    }
+
+    public async Task<List<Produto>> GetAllWithDetailsAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Produtos
+            .Include(p => p.Categoria)
+            .Include(p => p.Fornecedor)
+            .Include(p => p.EstoqueItens)
+            .OrderBy(p => p.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<Produto>> GetAtivosAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.Produtos
+            .Include(p => p.Categoria)
+            .Include(p => p.Fornecedor)
+            .Where(p => p.Ativo)
+            .OrderBy(p => p.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public void Update(Produto produto)
+    {
+        _context.Produtos.Update(produto);
+    }
+
+    public void Delete(Produto produto)
+    {
+        _context.Produtos.Remove(produto);
+    }
+
+    public async Task<bool> HasMovimentacoesAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        return await _context.EstoqueMovimentos
+            .AnyAsync(m => m.EstoqueItem != null && m.EstoqueItem.ProdutoId == id, cancellationToken);
+    }
 }

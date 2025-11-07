@@ -1,0 +1,25 @@
+# Pasta de binários e objetos gerados pelo .NET
+# É O MAIS IMPORTANTE! Resolve 99% dos seus arquivos
+obj/
+bin/
+
+# Arquivos gerados pelo usuário (como os .old que você mostrou)
+*.old
+
+# Cache do NuGet
+*.nuget.cache
+*.nuget.props
+*.nuget.targets
+
+# Arquivos de build e assets (resolve o project.assets.json)
+project.assets.json
+*.csproj.user
+*.dgspec.json
+
+# Arquivos do Rider/Resharper
+.idea/
+.vs/
+*.sln.DotSettings.user
+
+# Arquivos do VS Code
+.vscode/

@@ -1,5 +1,8 @@
 using SGE.Application;
 using SGE.Infrastructure;
+using SGE.Infrastructure.Data;
+using SGE.Infrastructure.Data.Seed;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -81,5 +84,12 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Database seeding
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await DataSeed.SeedAsync(context);
+}
 
 app.Run();

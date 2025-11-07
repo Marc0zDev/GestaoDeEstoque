@@ -26,7 +26,17 @@ public class FornecedorConfiguration : IEntityTypeConfiguration<Fornecedor>
         builder.Property(f => f.Ativo)
             .IsRequired();
 
-        builder.HasIndex(f => f.Cnpj.Value)
-            .IsUnique();
+        // Configuração do value object Cnpj
+        builder.OwnsOne(f => f.Cnpj, cnpj =>
+        {
+            cnpj.Property(c => c.Value)
+                .HasColumnName("Cnpj")
+                .IsRequired()
+                .HasMaxLength(14);
+                
+            // Índice único na coluna Cnpj
+            cnpj.HasIndex(c => c.Value)
+                .IsUnique();
+        });
     }
 }

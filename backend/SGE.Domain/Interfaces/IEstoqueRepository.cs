@@ -30,4 +30,17 @@ public interface IEstoqueRepository
     Task<bool> PodeRemoverQuantidadeAsync(Guid produtoId, Guid localId, decimal quantidade, CancellationToken cancellationToken = default);
     Task<decimal> GetQuantidadeTotalProdutoAsync(Guid produtoId, CancellationToken cancellationToken = default);
     Task<List<EstoqueItem>> GetRelatorioPosicaoEstoqueAsync(CancellationToken cancellationToken = default);
+    
+    // Relatórios específicos
+    Task<List<EstoqueItem>> GetByProdutoIdAsync(Guid produtoId, CancellationToken cancellationToken = default);
+    Task<List<EstoqueItem>> GetAllAsync(CancellationToken cancellationToken = default);
+    Task<EstoqueMovimento?> GetUltimaMovimentacaoAsync(Guid estoqueItemId, CancellationToken cancellationToken = default);
+    Task<List<EstoqueMovimento>> GetMovimentacoesPorPeriodoAsync(
+        DateTime dataInicio, 
+        DateTime dataFim, 
+        Guid? produtoId = null, 
+        Enums.TipoMovimento? tipoMovimento = null, 
+        Guid? usuarioId = null, 
+        Guid? localArmazenagemId = null, 
+        CancellationToken cancellationToken = default);
 }

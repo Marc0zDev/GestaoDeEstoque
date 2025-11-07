@@ -228,4 +228,92 @@ public class EstoqueRepository : IEstoqueRepository
     }
 
     #endregion
+
+    #region Relatórios específicos
+
+    public async Task<List<EstoqueItem>> GetByProdutoIdAsync(Guid produtoId, CancellationToken cancellationToken = default)
+    {
+        return await _context.EstoqueItens
+            .Include(e => e.Produto)
+                .ThenInclude(p => p.Categoria)
+            .Include(e => e.Produto)
+                .ThenInclude(p => p.Fornecedor)
+            .Include(e => e.LocalArmazenagem)
+            .Where(e => e.ProdutoId == produtoId)
+            .OrderBy(e => e.LocalArmazenagem.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<EstoqueItem>> GetAllAsync(CancellationToken cancellationToken = default)
+    {
+        return await _context.EstoqueItens
+            .Include(e => e.Produto)
+                .ThenInclude(p => p.Categoria)
+            .Include(e => e.Produto)
+                .ThenInclude(p => p.Fornecedor)
+            .Include(e => e.LocalArmazenagem)
+            .Include(e => e.Movimentos)
+            .Where(e => e.Produto.Ativo)
+            .OrderBy(e => e.Produto.Nome)
+            .ThenBy(e => e.LocalArmazenagem.Nome)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<EstoqueMovimento?> GetUltimaMovimentacaoAsync(Guid estoqueItemId, CancellationToken cancellationToken = default)
+    {
+        return await _context.EstoqueMovimentos
+            .Include(m => m.EstoqueItem)
+                .ThenInclude(e => e.Produto)
+            .Include(m => m.EstoqueItem)
+                .ThenInclude(e => e.LocalArmazenagem)
+            .Where(m => m.EstoqueItemId == estoqueItemId)
+            .OrderByDescending(m => m.DataMovimento)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<List<EstoqueMovimento>> GetMovimentacoesPorPeriodoAsync(
+        DateTime dataInicio,
+        DateTime dataFim,
+        Guid? produtoId = null,
+        TipoMovimento? tipoMovimento = null,
+        Guid? usuarioId = null,
+        Guid? localArmazenagemId = null,
+        CancellationToken cancellationToken = default)
+    {
+        var query = _context.EstoqueMovimentos
+            .Include(m => m.EstoqueItem)
+                .ThenInclude(e => e.Produto)
+                    .ThenInclude(p => p.Categoria)
+            .Include(m => m.EstoqueItem)
+                .ThenInclude(e => e.Produto)
+                    .ThenInclude(p => p.Fornecedor)
+            .Include(m => m.EstoqueItem)
+                .ThenInclude(e => e.LocalArmazenagem)
+            .Where(m => m.DataMovimento >= dataInicio && m.DataMovimento <= dataFim)
+            .AsQueryable();
+
+        if (produtoId.HasValue)
+        {
+            query = query.Where(m => m.EstoqueItem.ProdutoId == produtoId.Value);
+        }
+
+        if (tipoMovimento.HasValue)
+        {
+            query = query.Where(m => m.TipoMovimento == tipoMovimento.Value);
+        }
+
+        if (localArmazenagemId.HasValue)
+        {
+            query = query.Where(m => m.EstoqueItem.LocalArmazenagemId == localArmazenagemId.Value);
+        }
+
+        // Note: usuarioId não está implementado na entidade EstoqueMovimento atual
+        // Se necessário, seria preciso adicionar essa propriedade à entidade
+
+        return await query
+            .OrderByDescending(m => m.DataMovimento)
+            .ToListAsync(cancellationToken);
+    }
+
+    #endregion
 }

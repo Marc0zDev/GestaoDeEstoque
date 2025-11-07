@@ -28,6 +28,11 @@ public class EstoqueMovimentoConfiguration : IEntityTypeConfiguration<EstoqueMov
         builder.Property(em => em.DataMovimento)
             .IsRequired();
 
+        // Configuração do enum TipoMovimento
+        builder.Property(em => em.TipoMovimento)
+            .HasConversion<string>()
+            .IsRequired();
+
         // Relationships
         builder.HasOne(em => em.EstoqueItem)
             .WithMany(e => e.Movimentos)

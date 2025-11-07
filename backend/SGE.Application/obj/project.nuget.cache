@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+jurn/tQBwg=",
+  "dgSpecHash": "bjof1vUtt5c=",
   "success": true,
-  "projectFilePath": "C:\\Projeto\\pucminas\\GestaoEstoque\\backend\\SGE.Application\\SGE.Application.csproj",
+  "projectFilePath": "C:\\Projeto\\pucminas\\GestaoEstoque\\GestaoDeEstoque\\backend\\SGE.Application\\SGE.Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Marcos\\.nuget\\packages\\automapper\\15.1.0\\automapper.15.1.0.nupkg.sha512",
     "C:\\Users\\Marcos\\.nuget\\packages\\fluentvalidation\\11.11.0\\fluentvalidation.11.11.0.nupkg.sha512",
@@ -19,5 +19,15 @@
     "C:\\Users\\Marcos\\.nuget\\packages\\microsoft.identitymodel.logging\\8.14.0\\microsoft.identitymodel.logging.8.14.0.nupkg.sha512",
     "C:\\Users\\Marcos\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.14.0\\microsoft.identitymodel.tokens.8.14.0.nupkg.sha512"
   ],
-  "logs": []
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "message": "Ocorreu um erro ao obter os dados de vulnerabilidade do pacote: O tempo limite para o download de 'https://api.nuget.org/v3-vulnerabilities/2025.11.06.05.42.07/vulnerability.base.json' foi atingido porque nenhum dado foi recebido por 60000 ms.",
+      "projectPath": "C:\\Projeto\\pucminas\\GestaoEstoque\\GestaoDeEstoque\\backend\\SGE.Application\\SGE.Application.csproj",
+      "warningLevel": 1,
+      "filePath": "C:\\Projeto\\pucminas\\GestaoEstoque\\GestaoDeEstoque\\backend\\SGE.Application\\SGE.Application.csproj",
+      "targetGraphs": []
+    }
+  ]
 }
