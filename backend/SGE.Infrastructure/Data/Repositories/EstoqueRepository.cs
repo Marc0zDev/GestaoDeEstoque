@@ -68,14 +68,14 @@ public class EstoqueRepository : IEstoqueRepository
         return await _context.EstoqueItens
             .Include(e => e.Produto)
             .Include(e => e.LocalArmazenagem)
-            .Where(e => e.Produto.Ativo)
+            .Where(e => e.Produto != null && e.Produto.Ativo)
             .GroupBy(e => e.ProdutoId)
             .Select(g => new { ProdutoId = g.Key, TotalQuantidade = g.Sum(e => e.Quantidade) })
             .Join(_context.Produtos, 
                   estoque => estoque.ProdutoId, 
                   produto => produto.Id, 
                   (estoque, produto) => new { estoque.TotalQuantidade, produto })
-            .Where(x => x.TotalQuantidade <= x.produto.EstoqueMinimo)
+            .Where(x => x.TotalQuantidade <= x.produto.EstoqueMinimo && x.produto.Ativo)
             .SelectMany(x => _context.EstoqueItens
                 .Include(e => e.Produto)
                 .Include(e => e.LocalArmazenagem)
@@ -221,7 +221,7 @@ public class EstoqueRepository : IEstoqueRepository
             .Include(e => e.Produto)
                 .ThenInclude(p => p.Fornecedor)
             .Include(e => e.LocalArmazenagem)
-            .Where(e => e.Produto.Ativo)
+            .Where(e => e.Produto != null && e.Produto.Ativo)
             .OrderBy(e => e.Produto.Nome)
             .ThenBy(e => e.LocalArmazenagem.Nome)
             .ToListAsync(cancellationToken);
@@ -253,7 +253,7 @@ public class EstoqueRepository : IEstoqueRepository
                 .ThenInclude(p => p.Fornecedor)
             .Include(e => e.LocalArmazenagem)
             .Include(e => e.Movimentos)
-            .Where(e => e.Produto.Ativo)
+            .Where(e => e.Ativo && e.Produto != null && e.Produto.Ativo)
             .OrderBy(e => e.Produto.Nome)
             .ThenBy(e => e.LocalArmazenagem.Nome)
             .ToListAsync(cancellationToken);

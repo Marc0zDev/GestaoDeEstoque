@@ -133,6 +133,8 @@ namespace SGE.API.Services.Reports
 
         public byte[] GerarRelatorioProdutos(List<RelatorioProdutoItem> produtos)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+            
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -143,25 +145,18 @@ namespace SGE.API.Services.Reports
                     page.DefaultTextStyle(x => x.FontSize(12));
 
                     page.Header()
-                        .Height(100)
+                        .Height(80)
                         .Background(Colors.Grey.Lighten3)
                         .Padding(20)
-                        .Row(row =>
+                        .Column(column =>
                         {
-                            row.RelativeItem().Column(column =>
-                            {
-                                column.Item().Text("Sistema de Gestão de Estoque")
-                                    .FontSize(20)
-                                    .FontWeight(FontWeight.Bold)
-                                    .FontColor(Colors.Green.Darken2);
+                            column.Item().Text("Sistema de Gestão de Estoque")
+                                .FontSize(20)
+                                .Bold()
+                                .FontColor(Colors.Green.Darken2);
 
-                                column.Item().Text(text =>
-                                {
-                                    text.Span("Relatório de Produtos - ");
-                                    text.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"))
-                                        .FontWeight(FontWeight.Medium);
-                                });
-                            });
+                            column.Item().Text($"Relatório de Produtos - {DateTime.Now:dd/MM/yyyy HH:mm}")
+                                .FontSize(12);
                         });
 
                     page.Content()
@@ -177,19 +172,14 @@ namespace SGE.API.Services.Reports
                                 {
                                     col.Item().Text("Resumo dos Produtos")
                                         .FontSize(16)
-                                        .FontWeight(FontWeight.Bold)
+                                        .Bold()
                                         .FontColor(Colors.Green.Darken1);
 
                                     col.Item().PaddingTop(10).Row(row =>
                                     {
-                                        row.RelativeItem().Text($"Total: {produtos.Count} produtos")
-                                            .FontWeight(FontWeight.Medium);
-                                        
-                                        row.RelativeItem().Text($"Ativos: {produtos.Count(p => p.Ativo)}")
-                                            .FontWeight(FontWeight.Medium);
-                                        
-                                        row.RelativeItem().Text($"Inativos: {produtos.Count(p => !p.Ativo)}")
-                                            .FontWeight(FontWeight.Medium);
+                                        row.RelativeItem().Text($"Total: {produtos.Count} produtos");
+                                        row.RelativeItem().Text($"Ativos: {produtos.Count(p => p.Ativo)}");
+                                        row.RelativeItem().Text($"Inativos: {produtos.Count(p => !p.Ativo)}");
                                     });
                                 });
 
@@ -198,56 +188,37 @@ namespace SGE.API.Services.Reports
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
-                                    columns.RelativeColumn(3); // Nome
-                                    columns.RelativeColumn(2); // Código
-                                    columns.RelativeColumn(2); // Categoria
-                                    columns.RelativeColumn(2); // Preço Compra
-                                    columns.RelativeColumn(2); // Preço Venda
-                                    columns.RelativeColumn(1); // Status
+                                    columns.RelativeColumn(3);
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(1);
                                 });
 
                                 table.Header(header =>
                                 {
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Nome").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Código").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Categoria").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Preço Compra").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Preço Venda").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Green.Darken2).Text("Status").FontColor(Colors.White);
-
-                                    static IContainer CellStyle(IContainer container)
-                                    {
-                                        return container.DefaultTextStyle(x => x.FontWeight(FontWeight.Bold))
-                                            .PaddingVertical(5)
-                                            .PaddingHorizontal(10)
-                                            .AlignCenter()
-                                            .AlignMiddle();
-                                    }
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Nome").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Código").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Categoria").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Preço Compra").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Preço Venda").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Green.Darken2).Padding(8).Text("Status").FontColor(Colors.White).Bold();
                                 });
 
                                 foreach (var produto in produtos)
                                 {
                                     var backgroundColor = produto.Ativo ? Colors.White : Colors.Grey.Lighten4;
 
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor)).Text(produto.Nome);
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor)).Text(produto.Codigo);
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor)).Text(produto.CategoriaNome ?? "-");
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor)).Text(produto.PrecoCompra.ToString("C")).AlignRight();
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor)).Text(produto.PrecoVenda.ToString("C")).AlignRight();
-                                    table.Cell().Element(container => CellStyle(container, backgroundColor))
+                                    table.Cell().Background(backgroundColor).Padding(8).Text(produto.Nome);
+                                    table.Cell().Background(backgroundColor).Padding(8).Text(produto.Codigo);
+                                    table.Cell().Background(backgroundColor).Padding(8).Text(produto.CategoriaNome ?? "-");
+                                    table.Cell().Background(backgroundColor).Padding(8).Text(produto.PrecoCompra.ToString("C")).AlignRight();
+                                    table.Cell().Background(backgroundColor).Padding(8).Text(produto.PrecoVenda.ToString("C")).AlignRight();
+                                    table.Cell().Background(backgroundColor).Padding(8)
                                         .Text(produto.Ativo ? "ATIVO" : "INATIVO")
                                         .FontColor(produto.Ativo ? Colors.Green.Darken2 : Colors.Red.Darken2)
-                                        .FontWeight(FontWeight.Bold);
-
-                                    static IContainer CellStyle(IContainer container, string backgroundColor)
-                                    {
-                                        return container.Background(backgroundColor)
-                                            .BorderBottom(1)
-                                            .BorderColor(Colors.Grey.Lighten2)
-                                            .PaddingVertical(8)
-                                            .PaddingHorizontal(10)
-                                            .AlignMiddle();
-                                    }
+                                        .Bold();
                                 }
                             });
                         });
@@ -262,8 +233,7 @@ namespace SGE.API.Services.Reports
                             x.CurrentPageNumber();
                             x.Span(" de ");
                             x.TotalPages();
-                            x.Span(" - Gerado em ");
-                            x.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                            x.Span($" - Gerado em {DateTime.Now:dd/MM/yyyy HH:mm}");
                         });
                 });
             });
@@ -273,6 +243,8 @@ namespace SGE.API.Services.Reports
 
         public byte[] GerarRelatorioMovimentacoes(List<RelatorioMovimentacaoItem> movimentacoes)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+            
             var document = Document.Create(container =>
             {
                 container.Page(page =>
@@ -283,25 +255,18 @@ namespace SGE.API.Services.Reports
                     page.DefaultTextStyle(x => x.FontSize(12));
 
                     page.Header()
-                        .Height(100)
+                        .Height(80)
                         .Background(Colors.Grey.Lighten3)
                         .Padding(20)
-                        .Row(row =>
+                        .Column(column =>
                         {
-                            row.RelativeItem().Column(column =>
-                            {
-                                column.Item().Text("Sistema de Gestão de Estoque")
-                                    .FontSize(20)
-                                    .FontWeight(FontWeight.Bold)
-                                    .FontColor(Colors.Orange.Darken2);
+                            column.Item().Text("Sistema de Gestão de Estoque")
+                                .FontSize(20)
+                                .Bold()
+                                .FontColor(Colors.Orange.Darken2);
 
-                                column.Item().Text(text =>
-                                {
-                                    text.Span("Relatório de Movimentações - ");
-                                    text.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"))
-                                        .FontWeight(FontWeight.Medium);
-                                });
-                            });
+                            column.Item().Text($"Relatório de Movimentações - {DateTime.Now:dd/MM/yyyy HH:mm}")
+                                .FontSize(12);
                         });
 
                     page.Content()
@@ -317,23 +282,20 @@ namespace SGE.API.Services.Reports
                                 {
                                     col.Item().Text("Resumo das Movimentações")
                                         .FontSize(16)
-                                        .FontWeight(FontWeight.Bold)
+                                        .Bold()
                                         .FontColor(Colors.Orange.Darken1);
 
                                     col.Item().PaddingTop(10).Row(row =>
                                     {
-                                        row.RelativeItem().Text($"Total: {movimentacoes.Count} movimentações")
-                                            .FontWeight(FontWeight.Medium);
+                                        row.RelativeItem().Text($"Total: {movimentacoes.Count} movimentações");
                                         
                                         var entradas = movimentacoes.Count(m => m.TipoMovimento == "Entrada");
                                         var saidas = movimentacoes.Count(m => m.TipoMovimento == "Saída");
                                         
                                         row.RelativeItem().Text($"Entradas: {entradas}")
-                                            .FontWeight(FontWeight.Medium)
                                             .FontColor(Colors.Green.Darken1);
                                         
                                         row.RelativeItem().Text($"Saídas: {saidas}")
-                                            .FontWeight(FontWeight.Medium)
                                             .FontColor(Colors.Red.Darken1);
                                     });
                                 });
@@ -343,53 +305,34 @@ namespace SGE.API.Services.Reports
                             {
                                 table.ColumnsDefinition(columns =>
                                 {
-                                    columns.RelativeColumn(2); // Data
-                                    columns.RelativeColumn(3); // Produto
-                                    columns.RelativeColumn(1); // Tipo
-                                    columns.RelativeColumn(1); // Quantidade
-                                    columns.RelativeColumn(2); // Observações
+                                    columns.RelativeColumn(2);
+                                    columns.RelativeColumn(3);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(2);
                                 });
 
                                 table.Header(header =>
                                 {
-                                    header.Cell().Element(CellStyle).Background(Colors.Orange.Darken2).Text("Data").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Orange.Darken2).Text("Produto").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Orange.Darken2).Text("Tipo").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Orange.Darken2).Text("Quantidade").FontColor(Colors.White);
-                                    header.Cell().Element(CellStyle).Background(Colors.Orange.Darken2).Text("Observações").FontColor(Colors.White);
-
-                                    static IContainer CellStyle(IContainer container)
-                                    {
-                                        return container.DefaultTextStyle(x => x.FontWeight(FontWeight.Bold))
-                                            .PaddingVertical(5)
-                                            .PaddingHorizontal(10)
-                                            .AlignCenter()
-                                            .AlignMiddle();
-                                    }
+                                    header.Cell().Background(Colors.Orange.Darken2).Padding(8).Text("Data").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Orange.Darken2).Padding(8).Text("Produto").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Orange.Darken2).Padding(8).Text("Tipo").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Orange.Darken2).Padding(8).Text("Quantidade").FontColor(Colors.White).Bold();
+                                    header.Cell().Background(Colors.Orange.Darken2).Padding(8).Text("Observações").FontColor(Colors.White).Bold();
                                 });
 
                                 foreach (var movimento in movimentacoes.OrderByDescending(m => m.DataMovimento))
                                 {
                                     var isEntrada = movimento.TipoMovimento == "Entrada";
 
-                                    table.Cell().Element(CellStyle).Text(movimento.DataMovimento.ToString("dd/MM/yyyy HH:mm"));
-                                    table.Cell().Element(CellStyle).Text(movimento.NomeProduto);
-                                    table.Cell().Element(CellStyle)
+                                    table.Cell().Background(Colors.White).Padding(8).Text(movimento.DataMovimento.ToString("dd/MM/yyyy HH:mm"));
+                                    table.Cell().Background(Colors.White).Padding(8).Text(movimento.NomeProduto);
+                                    table.Cell().Background(Colors.White).Padding(8)
                                         .Text(movimento.TipoMovimento)
                                         .FontColor(isEntrada ? Colors.Green.Darken2 : Colors.Red.Darken2)
-                                        .FontWeight(FontWeight.Bold);
-                                    table.Cell().Element(CellStyle).Text(movimento.Quantidade.ToString("N2")).AlignRight();
-                                    table.Cell().Element(CellStyle).Text(movimento.Observacoes ?? "-");
-
-                                    static IContainer CellStyle(IContainer container)
-                                    {
-                                        return container.Background(Colors.White)
-                                            .BorderBottom(1)
-                                            .BorderColor(Colors.Grey.Lighten2)
-                                            .PaddingVertical(8)
-                                            .PaddingHorizontal(10)
-                                            .AlignMiddle();
-                                    }
+                                        .Bold();
+                                    table.Cell().Background(Colors.White).Padding(8).Text(movimento.Quantidade.ToString("N2")).AlignRight();
+                                    table.Cell().Background(Colors.White).Padding(8).Text(movimento.Observacoes ?? "-");
                                 }
                             });
                         });
@@ -404,8 +347,7 @@ namespace SGE.API.Services.Reports
                             x.CurrentPageNumber();
                             x.Span(" de ");
                             x.TotalPages();
-                            x.Span(" - Gerado em ");
-                            x.Span(DateTime.Now.ToString("dd/MM/yyyy HH:mm"));
+                            x.Span($" - Gerado em {DateTime.Now:dd/MM/yyyy HH:mm}");
                         });
                 });
             });

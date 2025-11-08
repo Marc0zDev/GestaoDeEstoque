@@ -4,6 +4,7 @@ using SGE.Infrastructure.Data;
 using SGE.Infrastructure.Data.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using SGE.API.Services.Reports;
 
 var builder = WebApplication.CreateBuilder(args);
 

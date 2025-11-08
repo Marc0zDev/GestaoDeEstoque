@@ -4,12 +4,10 @@ using SGE.Domain.Entities;
 
 namespace SGE.Infrastructure.Data.Configurations;
 
-public class EstoqueItemConfiguration : IEntityTypeConfiguration<EstoqueItem>
+public class EstoqueItemConfiguration : BaseEntityConfiguration<EstoqueItem>
 {
-    public void Configure(EntityTypeBuilder<EstoqueItem> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<EstoqueItem> builder)
     {
-        builder.HasKey(e => e.Id);
-
         builder.Property(e => e.Quantidade)
             .IsRequired()
             .HasColumnType("decimal(18,3)");
